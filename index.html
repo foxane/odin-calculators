@@ -9,13 +9,8 @@
   <body>
     <div class="calculator">
       <div class="display">
-        <input
-          type="number"
-          id="input-display"
-          readonly
-          placeholder="1*2*3*4"
-        />
-        <input type="number" id="output-display" readonly placeholder="12345" />
+        <input type="text" id="input-display" readonly placeholder="1*2*3*4" />
+        <input type="text" id="output-display" readonly placeholder="12345" />
       </div>
       <div class="keys">
         <button type="button" class="number">1</button>
@@ -37,6 +32,10 @@
         <button type="button" class="function" id="clear">C</button>
         <button type="button" class="equal" id="equal">&equals;</button>
       </div>
+      <div class="what">
+        <p id="what">this text contain letters</p>
+      </div>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>
