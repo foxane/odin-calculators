@@ -1,4 +1,5 @@
 const display = document.getElementById('display');
+const smallDisplay = document.getElementById('small-display');
 const keys = document.querySelectorAll('button');
 
 let input = '',
@@ -6,28 +7,29 @@ let input = '',
   operand = [],
   result = 0;
 
+const arithmathic = {
+  '+': (operand1, operand2) => operand1 + operand2,
+  '-': (operand1, operand2) => operand1 - operand2,
+  '*': (operand1, operand2) => operand1 * operand2,
+  '/': (operand1, operand2) => operand1 / operand2,
+};
+
 keys.forEach((key) =>
   key.addEventListener('click', function () {
-    console.log('Button clicked', key.textContent);
     if (key.classList.contains('number')) {
-      console.log('Appending number');
       appendNumber(key.textContent);
     } else if (key.id === 'dot') {
-      console.log('Appending dot');
       appendDot();
     } else if (key.classList.contains('operator')) {
-      console.log('Appending operator');
       appendOperator(key.id);
-      console.log('input', input, 'operand', operand, 'operator', operator);
-    } else if (key.if === 'equal') {
-      // Do when ewual clicked
+    } else if (key.id === 'equal') {
+      calculate();
     } else if (key.id === 'delete') {
       // Do when delete
     } else if (key.id === 'clear') {
       // Eraasaaaaaaaaaaaaaase
     }
     display.value = input;
-    console.log('input', input);
   })
 );
 
@@ -61,7 +63,7 @@ function appendDot() {
 function appendOperator(op) {
   // If all value is set
   if (operator && operand.length === 1 && input) {
-    operand.push(input);
+    operand.push(parseInt(input));
     calculate();
     operator = op;
   } else {
@@ -84,5 +86,25 @@ function appendOperator(op) {
         return;
       }
     }
+  }
+  updateDisplay();
+}
+
+function calculate() {
+  if (input) operand.push(parseInt(input));
+  console.log('calculating');
+  console.log(typeof operand[0], typeof operand[1]);
+  result = arithmathic[operator](operand[0], operand[1]);
+  updateDisplay();
+  operator = '';
+  operand.pop();
+}
+
+function updateDisplay() {
+  if (result) {
+    smallDisplay.value = result;
+    display.value = result;
+  } else {
+    smallDisplay.value = `${operand[0] ? operand[0] : ''} ${operator}`;
   }
 }
