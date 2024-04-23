@@ -8,9 +8,12 @@ let input = '',
 
 keys.forEach((key) =>
   key.addEventListener('click', function () {
+    console.log('Button clicked', key.textContent);
     if (key.classList.contains('number')) {
+      console.log('Appending number');
       appendNumber(key.textContent);
     } else if (key.id === 'dot') {
+      console.log('Appending dot');
       appendDot();
     } else if (key.classList.contains('operator')) {
       operator = key.id;
@@ -22,7 +25,7 @@ keys.forEach((key) =>
       // Eraasaaaaaaaaaaaaaase
     }
     display.value = input;
-    console.log(input);
+    console.log('input', input);
   })
 );
 
