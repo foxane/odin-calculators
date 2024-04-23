@@ -2,9 +2,9 @@ const display = document.getElementById('display');
 const keys = document.querySelectorAll('button');
 
 let input = '',
-  operand1 = 0,
-  operand2 = 0,
-  operator = '';
+  operator = '',
+  operand = [],
+  result = 0;
 
 keys.forEach((key) =>
   key.addEventListener('click', function () {
@@ -16,7 +16,9 @@ keys.forEach((key) =>
       console.log('Appending dot');
       appendDot();
     } else if (key.classList.contains('operator')) {
-      operator = key.id;
+      console.log('Appending operator');
+      appendOperator(key.id);
+      console.log('input', input, 'operand', operand, 'operator', operator);
     } else if (key.if === 'equal') {
       // Do when ewual clicked
     } else if (key.id === 'delete') {
@@ -43,13 +45,44 @@ function appendNumber(num) {
 }
 
 function appendDot() {
+  // Check if input already contains dot
   if (input) {
     if (input.includes('.')) {
       return;
     } else {
       input += '.';
     }
+    // Append zero if input has no value
   } else {
     input = '0.';
+  }
+}
+
+function appendOperator(op) {
+  // If all value is set
+  if (operator && operand.length === 1 && input) {
+    operand.push(input);
+    calculate();
+    operator = op;
+  } else {
+    // Check if operator is minus
+    if (op === '-') {
+      // Decide whether minus is operator or operand
+      if (input) {
+        operator = op;
+      } else {
+        input += op;
+      }
+      // Operator other than minus
+    } else {
+      // Check if input has value
+      if (input) {
+        operator = op;
+        operand.push(parseInt(input));
+        input = '';
+      } else {
+        return;
+      }
+    }
   }
 }
