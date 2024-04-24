@@ -72,4 +72,5 @@ input {
     border-bottom: 1px solid hsl(0, 0%, 50%);
     border-radius: 10px;
     text-indent: 10px;
+    color: white;
 }
