@@ -2,19 +2,17 @@ const display = document.getElementById('display');
 const btns = document.querySelectorAll('button');
 const inputArr = [];
 let result = 0;
+const OPERATOR = ['+', '-', '*', '/'];
 
-const calculate = {
-  sum: (operand1, opreand2) => operand1 + opreand2,
-  sub: (operand1, opreand2) => operand1 - opreand2,
-  mul: (operand1, opreand2) => operand1 * opreand2,
-  div: (operand1, opreand2) => operand1 / opreand2,
+const arithmetic = {
+  '+': (operand1, opreand2) => operand1 + opreand2,
+  '-': (operand1, opreand2) => operand1 - opreand2,
+  '*': (operand1, opreand2) => operand1 * opreand2,
+  '/': (operand1, opreand2) => operand1 / opreand2,
 };
 
-const containOperator = function (arr) {
-  const OPERATOR = ['+', '-', '*', '/'];
-  return arr.some((element) => OPERATOR.includes(element));
-};
-
+const containOperator = (arr) =>
+  arr.some((element) => OPERATOR.includes(element));
 // Adding event handler for all btns
 btns.forEach((btn) =>
   btn.addEventListener('click', function () {
@@ -37,7 +35,7 @@ function inputHandler(btnNode) {
 
 function inputFilter(btn) {
   // Dot
-  if (btn.classList.contains('dot')) {
+  if (btn.classList.contains('dot') && floatValidation(inputArr)) {
     // Input array is empty
     if (inputArr.length === 0) {
       inputArr.push(0);
@@ -59,7 +57,7 @@ function inputFilter(btn) {
     // OPerator
   } else {
     if (!containOperator(inputArr) && inputArr.length > 0) {
-      operator = btn.textContent;
+      inputArr.push(btn.textContent);
     } else {
       operate();
     }
@@ -67,9 +65,41 @@ function inputFilter(btn) {
 }
 
 function operate() {
-  try {
-  } catch (error) {
-    display.value = 'FUCK YOU';
-    inputArr.length = 0;
+  calculate();
+  console.log('calculate');
+}
+function calculate() {
+  const [operator, ...bugTrap] = inputArr.filter(
+    (el) => isNaN(el) && el !== '.'
+  );
+  const operand1 = parseFloat(
+    inputArr.slice(0, inputArr.indexOf(operator)).join('')
+  );
+  const opreand2 = parseFloat(
+    inputArr.slice(inputArr.indexOf(operator + 1)).join('')
+  );
+  inputArr.length = 0;
+
+  inputArr.push(arithmetic[operator](operand1, opreand2));
+}
+
+function floatValidation(arr) {
+  let dotCount = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === 'number') {
+      // Reset dot count when encountering a number
+      dotCount = 0;
+    } else if (arr[i] === '.') {
+      dotCount++;
+      if (dotCount > 1) {
+        return false; // More than one dot between operators
+      }
+    } else if (OPERATOR.includes(arr[i])) {
+      // Reset dot count when encountering an operator
+      dotCount = 0;
+    }
   }
+
+  return true; // Valid expression
 }
