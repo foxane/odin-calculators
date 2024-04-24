@@ -1,6 +1,6 @@
 const display = document.getElementById('display');
 const btns = document.querySelectorAll('button');
-const inputArr = [];
+let inputArr = [];
 let result = 0;
 const OPERATOR = ['+', '-', '*', '/'];
 
@@ -35,17 +35,8 @@ function inputHandler(btnNode) {
 
 function inputFilter(btn) {
   // Dot
-  if (btn.classList.contains('dot') && floatValidation(inputArr)) {
-    // Input array is empty
-    if (inputArr.length === 0) {
-      inputArr.push(0);
-      inputArr.push('.');
-      // Input array already contain dot
-    } else if (inputArr.includes('.')) {
-      return;
-    } else {
-      inputArr.push('.');
-    }
+  if (btn.classList.contains('dot')) {
+    // TODO: Fix dot
     // Number
   } else if (btn.classList.contains('number')) {
     // Input array is empty and number is 0
@@ -72,34 +63,15 @@ function calculate() {
   const [operator, ...bugTrap] = inputArr.filter(
     (el) => isNaN(el) && el !== '.'
   );
-  const operand1 = parseFloat(
+  const operand1 = parseInt(
     inputArr.slice(0, inputArr.indexOf(operator)).join('')
   );
-  const opreand2 = parseFloat(
-    inputArr.slice(inputArr.indexOf(operator + 1)).join('')
+  const opreand2 = parseInt(
+    inputArr.slice(inputArr.indexOf(operator)).join('')
   );
-  inputArr.length = 0;
+  inputArr = '';
 
-  inputArr.push(arithmetic[operator](operand1, opreand2));
-}
+  inputArr = arithmetic[operator](operand1, opreand2).toString().split('');
 
-function floatValidation(arr) {
-  let dotCount = 0;
-
-  for (let i = 0; i < arr.length; i++) {
-    if (typeof arr[i] === 'number') {
-      // Reset dot count when encountering a number
-      dotCount = 0;
-    } else if (arr[i] === '.') {
-      dotCount++;
-      if (dotCount > 1) {
-        return false; // More than one dot between operators
-      }
-    } else if (OPERATOR.includes(arr[i])) {
-      // Reset dot count when encountering an operator
-      dotCount = 0;
-    }
-  }
-
-  return true; // Valid expression
+  console.log('operand1', operand1, 'operand2', opreand2, operator);
 }
