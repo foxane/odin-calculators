@@ -1,13 +1,10 @@
 const display = document.getElementById('display');
+const operatorDisplay = document.getElementById('display-operator');
 // Values
 const inputArr = [];
 let g_n1 = 0,
   g_n2 = 0,
   g_op = '';
-
-// Status
-let isFirstStage = false,
-  isSecondStage = false;
 
 // Button event listener
 document.querySelectorAll('button').forEach((btn) =>
@@ -21,7 +18,9 @@ document.querySelectorAll('button').forEach((btn) =>
     } else if (btn.classList.contains('function')) {
       functionHandler(btn.id);
     }
+
     display.value = inputArr.join('');
+    operatorDisplay.value = g_op ? g_op : '';
   })
 );
 
@@ -46,13 +45,13 @@ function appendOperator(op) {
   } else if (inputArr.length === 0) {
     return;
   } else {
-    firstStage(op);
+    staging(op);
   }
 }
 
 function functionHandler(func) {
   if (func === 'equal') {
-    operate();
+    calculate();
   } else if (func === 'delete') {
     deleteNum();
   } else if (func === 'clear') {
@@ -61,32 +60,52 @@ function functionHandler(func) {
 }
 
 // Main Logic
-// First stage is where g_n1 and g_op is defined '123 + ', '0913 - '
-function firstStage(op) {
-  if (isFirstStage) {
-    secondStage(op);
+function staging(op) {
+  if (g_n1) {
+    g_n2 = parseFloat(inputArr.join(''));
   } else {
     g_n1 = parseFloat(inputArr.join(''));
-    g_op = op;
-    inputArr.length = 0;
-    isFirstStage = true;
   }
-  console.log(g_n1, g_n2, g_op);
-}
-
-// Second is where g_n1 and g_n2 and g_op is defined
-function secondStage(op) {
-  if (isSecondStage) {
-    operate(op);
+  if (g_op) {
+    calculate();
   } else {
-    g_n2 = parseFloat(inputArr.join(''));
-    console.log(g_n1, g_n2, g_op);
-    isSecondStage = true;
+    g_op = op;
   }
+  inputArr.length = 0;
+  console.log(g_n1, g_n2);
 }
 
-function operate(op) {
-  // When second operator is passed from secondStage(user did not click equal)
-  if (op) {
+function calculate() {
+  if (g_n1 && g_n2 && g_op) {
+    let result = 0;
+    switch (g_op) {
+      case '+':
+        result = g_n1 + g_n2;
+        break;
+      case '-':
+        result = g_n1 - g_n2;
+        break;
+      case '*':
+        result = g_n1 * g_n2;
+        break;
+      case '/':
+        result = g_n1 / g_n2;
+        break;
+    }
+    if (result > 9) {
+      inputArr.length = 0;
+      result = result.toString().split('');
+      console.log(result);
+      result.forEach((num) => inputArr.push(num));
+    } else {
+      inputArr.length = 0;
+      inputArr.push(result);
+    }
+  } else if (!g_n2) {
+    g_n2 = parseFloat(inputArr.join(''));
+    calculate();
   }
+  g_n1 = 0;
+  g_n2 = 0;
+  g_op = '';
 }

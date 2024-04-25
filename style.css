@@ -62,8 +62,21 @@ button:active {
     filter: contrast(140%);
 }
 
+.display {
+    display: flex;
+    flex-flow: row nowrap;
+    column-gap: 5px;
+}
+#display {
+    width: 275px;
+    text-indent: 10px;
+
+}
+#display-operator {
+    width: 30px;
+    text-align: center;
+}
 input {
-    width: 100%;
     font-size: 2rem;
     height: 3rem;
     margin-bottom: 20px;
@@ -71,6 +84,5 @@ input {
     border: none;
     border-bottom: 1px solid hsl(0, 0%, 50%);
     border-radius: 10px;
-    text-indent: 10px;
     color: white;
 }
