@@ -2,13 +2,16 @@ const display = document.getElementById('display');
 const operatorDisplay = document.getElementById('display-operator');
 // Values
 const inputArr = [];
-let g_n1 = 0,
-  g_n2 = 0,
+let g_n1 = '',
+  g_n2 = '',
   g_op = '';
 
 // Button event listener
 document.querySelectorAll('button').forEach((btn) =>
   btn.addEventListener('click', function () {
+    if (inputArr.join('') === 'Error') {
+      inputArr.length = 0;
+    }
     if (btn.classList.contains('number')) {
       appendNumber(btn.textContent);
     } else if (btn.classList.contains('dot')) {
@@ -76,38 +79,43 @@ function staging(op) {
 }
 
 function calculate() {
-  if (g_n1 && g_n2 && g_op) {
-    let result = 0;
-    switch (g_op) {
-      case '+':
-        result = g_n1 + g_n2;
-        break;
-      case '-':
-        result = g_n1 - g_n2;
-        break;
-      case '*':
-        result = g_n1 * g_n2;
-        break;
-      case '/':
-        result = g_n1 / g_n2;
-        break;
+  try {
+    if (g_n1 && g_n2 && g_op) {
+      let result = 0;
+      switch (g_op) {
+        case '+':
+          result = g_n1 + g_n2;
+          break;
+        case '-':
+          result = g_n1 - g_n2;
+          break;
+        case '*':
+          result = g_n1 * g_n2;
+          break;
+        case '/':
+          result = g_n1 / g_n2;
+          break;
+      }
+      if (result > 9) {
+        inputArr.length = 0;
+        result = result.toString().split('');
+        console.log(result);
+        result.forEach((num) => inputArr.push(num));
+      } else {
+        inputArr.length = 0;
+        inputArr.push(result);
+      }
+    } else if (!g_n2) {
+      g_n2 = parseFloat(inputArr.join('')) ?? 1;
+      calculate();
     }
-    if (result > 9) {
-      inputArr.length = 0;
-      result = result.toString().split('');
-      console.log(result);
-      result.forEach((num) => inputArr.push(num));
-    } else {
-      inputArr.length = 0;
-      inputArr.push(result);
-    }
-  } else if (!g_n2) {
-    g_n2 = parseFloat(inputArr.join(''));
-    calculate();
+    g_n1 = 0;
+    g_n2 = 0;
+    g_op = '';
+  } catch (error) {
+    inputArr.length = 0;
+    inputArr.push('Error');
   }
-  g_n1 = 0;
-  g_n2 = 0;
-  g_op = '';
 }
 
 function deleteNum() {
@@ -119,8 +127,8 @@ function deleteNum() {
 }
 
 function clearEverything() {
-  g_n1 = 0;
-  g_n2 = 0;
+  g_n1 = '';
+  g_n2 = '';
   g_op = '';
   inputArr.length = 0;
 }
