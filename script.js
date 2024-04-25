@@ -109,3 +109,18 @@ function calculate() {
   g_n2 = 0;
   g_op = '';
 }
+
+function deleteNum() {
+  if (inputArr.length === 0) {
+    return;
+  } else {
+    inputArr.pop();
+  }
+}
+
+function clearEverything() {
+  g_n1 = 0;
+  g_n2 = 0;
+  g_op = '';
+  inputArr.length = 0;
+}
